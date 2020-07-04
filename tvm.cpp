@@ -172,3 +172,82 @@ uint16_t mem_read(uint16_t address)
     }
     return memory[address];
 }
+
+/* Input Buffering */
+struct termios original_tio;
+
+void disable_input_buffering()
+{
+    tcgetattr(STDIN_FILENO, &original_tio);
+    struct termios new_tio = original_tio;
+    new_tio.c_lflag &= ~ICANON & ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_tio);
+}
+
+void restore_input_buffering()
+{
+    tcsetattr(STDIN_FILENO, TCSANOW, &original_tio);
+}
+
+/* Handle Interrupt */
+void handle_interrupt(int signal)
+{
+    restore_input_buffering();
+    printf("\n");
+    exit(-2);
+}
+
+/* running state of virtual machine */
+int running = 1;
+
+/* executing instructions */
+template<unsigned op>
+void instr(uint16_t instr)
+{
+
+}
+
+/* Op Table */
+static void (*op_table[16])(uint16_t) = {
+    instr<0>, instr<1>, instr<2>, instr<3>,
+    instr<4>, instr<5>, instr<6>, instr<7>,
+    NULL, instr<9>, instr<10>, instr<11>,
+    instr<12>, NULL, instr<14>, instr<15>
+};
+
+int main(int argc, const char* argv[])
+{
+    /* Load Arguments */
+    if (argc < 2)
+    {
+        printf("lc3 [image-file1] ...\n");
+        exit(2);
+    }
+    
+    for (int j = 1; j < argc; ++j)
+    {
+        if (!read_image(argv[j]))
+        {
+            printf("failed to load image: %s\n", argv[j]);
+            exit(1);
+        }
+    }
+
+    /* Setup */
+    signal(SIGINT, handle_interrupt);
+    disable_input_buffering();
+
+
+    enum { PC_START = 0x3000 };
+    reg[R_PC] = PC_START;
+
+    while (running)
+    {
+        uint16_t instr = mem_read(reg[R_PC]++);
+        uint16_t op = instr >> 12;
+        op_table[op](instr);
+    }
+    
+    /* on exit */
+    restore_input_buffering();
+}
