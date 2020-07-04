@@ -197,14 +197,166 @@ void handle_interrupt(int signal)
     exit(-2);
 }
 
+
 /* running state of virtual machine */
 int running = 1;
+
+/* trap instructions */
+void trap(uint16_t instr)
+{
+    switch (instr & 0xFF)
+    {
+        case TRAP_GETC:
+            /* TRAP GETC */
+            /* read a single ASCII char */
+            reg[R_R0] = (uint16_t)getchar();
+            break;
+
+        case TRAP_OUT:
+            /* TRAP OUT */
+            putc((char)reg[R_R0], stdout);
+            fflush(stdout);
+            break;
+
+        case TRAP_PUTS:
+            /* TRAP PUTS */
+            {
+                /* one char per word */
+                uint16_t* c = memory + reg[R_R0];
+                while (*c)
+                {
+                    putc((char)*c, stdout);
+                    ++c;
+                }
+                fflush(stdout);
+            }
+            break;
+
+        case TRAP_IN:
+            /* TRAP IN */
+            {
+                printf("Enter a character: ");
+                char c = getchar();
+                putc(c, stdout);
+                reg[R_R0] = (uint16_t)c;
+            }
+            break;
+
+        case TRAP_PUTSP:
+            /* TRAP PUTSP */
+            {
+                /* one char per byte (two bytes per word)
+                here we need to swap back to
+                big endian format */
+                uint16_t* c = memory + reg[R_R0];
+                while (*c)
+                {
+                    char char1 = (*c) & 0xFF;
+                    putc(char1, stdout);
+                    char char2 = (*c) >> 8;
+                    if (char2) putc(char2, stdout);
+                    ++c;
+                }
+                fflush(stdout);
+            }
+            break;
+            
+        case TRAP_HALT:
+            /* TRAP HALT */
+            puts("HALT");
+            fflush(stdout);
+            running = 0;
+            break;
+    }
+}
 
 /* executing instructions */
 template<unsigned op>
 void instr(uint16_t instr)
 {
+    uint16_t r0, r1, r2, imm5, imm_flag;
+    uint16_t pc_plus_off, base_plus_off;
 
+    constexpr uint16_t opbit = (1 << op);
+    if (0x4EEE & opbit) { r0 = (instr >> 9) & 0x7; }
+    if (0x12F3 & opbit) { r1 = (instr >> 6) & 0x7; }
+    if (0x0022 & opbit)
+    {
+        imm_flag = (instr >> 5) & 0x1;
+
+        if (imm_flag)
+        {
+            imm5 = sign_extend(instr & 0x1F, 5);
+        }
+        else
+        {
+            r2 = instr & 0x7;
+        }
+    }
+    if (0x00C0 & opbit)
+    {   // Base + offset
+        base_plus_off = reg[r1] + sign_extend(instr & 0x3F, 6);
+    }
+    if (0x4C0D & opbit)
+    {
+        // Indirect address
+        pc_plus_off = reg[R_PC] + sign_extend(instr & 0x1FF, 9);
+    }
+    if (0x0001 & opbit)                             // BR
+    {
+        uint16_t cond = (instr >> 9) & 0x7;
+        if (cond & reg[R_COND]) { reg[R_PC] = pc_plus_off; }
+    }
+if (0x0002 & opbit)                                 // ADD
+    {
+        if (imm_flag)
+        {
+            reg[r0] = reg[r1] + imm5;
+        }
+        else
+        {
+            reg[r0] = reg[r1] + reg[r2];
+        }
+    }
+    if (0x0020 & opbit)                             // AND
+    {
+        if (imm_flag)
+        {
+            reg[r0] = reg[r1] & imm5;
+        }
+        else
+        {
+            reg[r0] = reg[r1] & reg[r2];
+        }
+    }
+    if (0x0200 & opbit) { reg[r0] = ~reg[r1]; }     // NOT
+    if (0x1000 & opbit) { reg[R_PC] = reg[r1]; }    // JMP
+    if (0x0010 & opbit)                             // JSR
+    {
+        uint16_t long_flag = (instr >> 11) & 1;
+        reg[R_R7] = reg[R_PC];
+        if (long_flag)
+        {
+            pc_plus_off = reg[R_PC] + sign_extend(instr & 0x7FF, 11);
+            reg[R_PC] = pc_plus_off;
+        }
+        else
+        {
+            reg[R_PC] = reg[r1];
+        }
+    }
+
+    if (0x0004 & opbit) { reg[r0] = mem_read(pc_plus_off); }                // LD
+    if (0x0400 & opbit) { reg[r0] = mem_read(mem_read(pc_plus_off)); }      // LDI
+    if (0x0040 & opbit) { reg[r0] = mem_read(base_plus_off); }              // LDR
+    if (0x4000 & opbit) { reg[r0] = pc_plus_off; }                          // LEA
+    if (0x0008 & opbit) { mem_write(pc_plus_off, reg[r0]); }                // ST
+    if (0x0800 & opbit) { mem_write(mem_read(pc_plus_off), reg[r0]); }      // STI
+    if (0x0080 & opbit) { mem_write(base_plus_off, reg[r0]); }              // STR
+    if (0x8000 & opbit) { trap(instr); }                                    // TRAP
+        
+    if (0x0100 & opbit) { }                                                 // RTI
+    if (0x4666 & opbit) { update_flags(r0); }
 }
 
 /* Op Table */
