@@ -278,8 +278,9 @@ void instr(uint16_t instr)
     uint16_t pc_plus_off, base_plus_off;
 
     constexpr uint16_t opbit = (1 << op);
-    if (0x4EEE & opbit) { r0 = (instr >> 9) & 0x7; }
-    if (0x12F3 & opbit) { r1 = (instr >> 6) & 0x7; }
+    if (0x4EEE & opbit) r0 = (instr >> 9) & 0x7;
+    if (0x12F3 & opbit) r1 = (instr >> 6) & 0x7;
+
     if (0x0022 & opbit)
     {
         imm_flag = (instr >> 5) & 0x1;
@@ -293,48 +294,48 @@ void instr(uint16_t instr)
             r2 = instr & 0x7;
         }
     }
+
     if (0x00C0 & opbit)
     {   // Base + offset
         base_plus_off = reg[r1] + sign_extend(instr & 0x3F, 6);
     }
+
     if (0x4C0D & opbit)
     {
         // Indirect address
         pc_plus_off = reg[R_PC] + sign_extend(instr & 0x1FF, 9);
     }
+
     if (0x0001 & opbit)                             // BR
     {
         uint16_t cond = (instr >> 9) & 0x7;
-        if (cond & reg[R_COND]) { reg[R_PC] = pc_plus_off; }
+        if (cond & reg[R_COND]) reg[R_PC] = pc_plus_off;
     }
-if (0x0002 & opbit)                                 // ADD
+
+    if (0x0002 & opbit)                             // ADD
     {
         if (imm_flag)
-        {
             reg[r0] = reg[r1] + imm5;
-        }
         else
-        {
             reg[r0] = reg[r1] + reg[r2];
-        }
     }
+
     if (0x0020 & opbit)                             // AND
     {
         if (imm_flag)
-        {
             reg[r0] = reg[r1] & imm5;
-        }
         else
-        {
             reg[r0] = reg[r1] & reg[r2];
-        }
     }
-    if (0x0200 & opbit) { reg[r0] = ~reg[r1]; }     // NOT
-    if (0x1000 & opbit) { reg[R_PC] = reg[r1]; }    // JMP
+
+    if (0x0200 & opbit) reg[r0] = ~reg[r1];         // NOT
+    if (0x1000 & opbit) reg[R_PC] = reg[r1];        // JMP
+
     if (0x0010 & opbit)                             // JSR
     {
         uint16_t long_flag = (instr >> 11) & 1;
         reg[R_R7] = reg[R_PC];
+
         if (long_flag)
         {
             pc_plus_off = reg[R_PC] + sign_extend(instr & 0x7FF, 11);
@@ -388,7 +389,6 @@ int main(int argc, const char* argv[])
     /* Setup */
     signal(SIGINT, handle_interrupt);
     disable_input_buffering();
-
 
     enum { PC_START = 0x3000 };
     reg[R_PC] = PC_START;
