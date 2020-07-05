@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -11,6 +12,7 @@
 #include <sys/termios.h>
 #include <sys/mman.h>
 
+using namespace std;
 /* Registers */
 enum
 {
@@ -132,6 +134,7 @@ int read_image(const char* image_path)
 {
     FILE* file = fopen(image_path, "rb");
     if (!file) { return 0; };
+    cout << "here" << endl;
     read_image_file(file);
     fclose(file);
     return 1;
