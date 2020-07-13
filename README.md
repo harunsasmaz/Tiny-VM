@@ -4,11 +4,11 @@ A very simple virtual machine that runs on LC-3 Computer and LC-3 assembly langu
 
 ## Compile and Run
 
-* To compile:
+<b>To compile:</b>
 
 > make
 
-* To run an object file:
+<b>To run an object file:</b>
 
 > ./tvm maze.obj, or
 
@@ -31,9 +31,11 @@ A very simple virtual machine that runs on LC-3 Computer and LC-3 assembly langu
 
 * <b>Program Counter:</b> A 16-bit register containing the next instruction to be executed.
 
-* <b>General use registers:</b> Eight 16-bit registers for general use to store values.
+* <b>General use registers:</b> Eight 16-bit registers for general use to store values. Hence, each register needs 3 bits for addressing in machine code.
 
-* <b>Condition Codes:</b> Three 1-bit registers to store negative,positive and zero conditions.
+* <b>Condition Codes:</b> Three 1-bit registers to store negative,positive and zero conditions. These bits are declared to obtain needed conditions for branch operations, i.e. BR. Branch operations can have multiple forms based on the combinations of these condition flags.
+
+* <b> Immediate Values:</b> Some instructions can take constant values such as ADD and AND operations. This VM uses 5-bit constant values.
 
 <h2> Instructions </h2>
 
