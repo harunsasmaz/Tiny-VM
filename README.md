@@ -37,7 +37,7 @@ A very simple virtual machine that runs on LC-3 Computer and LC-3 assembly langu
 
 <h2> Instructions </h2>
 
-<h4> ADD </h4>
+<h4> ADD (0001) </h4>
 
 ```c
 ADD DES SRC1 SRC2
@@ -47,7 +47,7 @@ ADD DES SRC1 SRC2
 ADD DES SRC1 IMM
 ```
 
-<h4> AND </h4>
+<h4> AND (0101) </h4>
 
 ```c
 AND DES SRC1 SRC2
@@ -57,19 +57,19 @@ AND DES SRC1 SRC2
 AND DES SRC1 IMM
 ```
 
-<h4> BR </h4>
+<h4> BR (0000) </h4>
 
 ```c
 BR n z p LABEL
 ```
 
-<h4> JMP </h4>
+<h4> JMP (1100) </h4>
 
 ```c
 JMP BaseR
 ```
 
-<h4> JS4 & JSRR </h4>
+<h4> JSR & JSRR (0100) </h4>
 
 ```c
 JSR LABEL
@@ -79,72 +79,72 @@ JSR LABEL
 JSRR BaseR
 ```
 
-<h4> LD </h4>
+<h4> LD (0010) </h4>
 
 ```c
 LD DST LABEL
 ```
 
-<h4> LDI </h4>
+<h4> LDI (1010) </h4>
 
 ```c
 LDI DST LABEL
 ```
 
-<h4> LDR </h4>
+<h4> LDR (0110) </h4>
 
 ```c
 LDR DST BaseR offset
 ```
 
-<h4> LEA </h4>
+<h4> LEA (1110) </h4>
 
 ```c
 LEA DST LABEL
 ```
 
-<h4> NOT </h4>
+<h4> NOT (1001) </h4>
 
 ```c
 NOT DST SRC1
 ```
 
-<h4> RET </h4>
+<h4> RET (1100) </h4>
 
 ```c
 RET
 ```
 
-<h4> RTI </h4>
+<h4> RTI (1000) </h4>
 
 ```c
 RTI
 ```
 
-<h4> ST </h4>
+<h4> ST (0011) </h4>
 
 ```c
 ST SRC1 LABEL
 ```
 
-<h4> STI </h4>
+<h4> STI (1011) </h4>
 
 ```c
 STI SRC1 LABEL
 ```
 
-<h4> STR </h4>
+<h4> STR (0111) </h4>
 
 ```c
 STR SRC1 BaseR offset
 ```
 
-<h4> TRAP </h4>
+<h4> TRAP (1111) </h4>
 
 ```c
 TRAP trapvector
 ```
 
-<h4> Unused opcode </h4>
+<h4> Unused opcode (1101) </h4>
 
 * Initiate an illegal opcode exception.
