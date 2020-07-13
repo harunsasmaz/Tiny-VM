@@ -59,63 +59,91 @@ AND DES SRC1 IMM
 
 <h4> BR </h4>
 
-* BR n z p LABEL
+```c
+BR n z p LABEL
+```
 
-<h4> JMP & RET </h4>
+<h4> JMP </h4>
 
-* JMP BaseR
-
-* RET
+```c
+JMP BaseR
+```
 
 <h4> JS4 & JSRR </h4>
 
-* JSR LABEL
+```c
+JSR LABEL
+```
 
-* JSRR BaseR
+```c
+JSRR BaseR
+```
 
 <h4> LD </h4>
 
-* LD DST LABEL
+```c
+LD DST LABEL
+```
 
 <h4> LDI </h4>
 
-* LDI DST LABEL
+```c
+LDI DST LABEL
+```
 
 <h4> LDR </h4>
 
-* LDR DST BaseR offset
+```c
+LDR DST BaseR offset
+```
 
 <h4> LEA </h4>
 
-* LEA DST LABEL
+```c
+LEA DST LABEL
+```
 
 <h4> NOT </h4>
 
-* NOT DST SRC1
+```c
+NOT DST SRC1
+```
 
 <h4> RET </h4>
 
-* RET
+```c
+RET
+```
 
 <h4> RTI </h4>
 
-* RTI
+```c
+RTI
+```
 
 <h4> ST </h4>
 
-* ST SRC1 LABEL
+```c
+ST SRC1 LABEL
+```
 
 <h4> STI </h4>
 
-* STI SRC1 LABEL
+```c
+STI SRC1 LABEL
+```
 
 <h4> STR </h4>
 
-* STR SRC1 BaseR offset
+```c
+STR SRC1 BaseR offset
+```
 
 <h4> TRAP </h4>
 
-* TRAP trapvector
+```c
+TRAP trapvector
+```
 
 <h4> Unused opcode </h4>
 
