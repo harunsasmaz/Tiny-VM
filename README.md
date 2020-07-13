@@ -4,15 +4,15 @@ A very simple virtual machine that runs on LC-3 Computer and LC-3 assembly langu
 
 ## Compile and Run
 
-To compile:
+* To compile:
 
-* make
+> make
 
-To run an object file:
+* To run an object file:
 
-* ./tvm maze.obj, or
+> ./tvm maze.obj, or
 
-* ./tvm 2048.obj
+> ./tvm 2048.obj
 
 <b> Note: </b> <code>maze.asm</code> is provided just to understand how a LC-3 assembly program looks like. Virtual machine itself executes image files, i.e. object files.
 
