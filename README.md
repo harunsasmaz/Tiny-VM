@@ -35,19 +35,27 @@ A very simple virtual machine that runs on LC-3 Computer and LC-3 assembly langu
 
 * <b>Condition Codes:</b> Three 1-bit registers to store negative,positive and zero conditions.
 
-<h3> Instructions </h3>
+<h2> Instructions </h2>
 
 <h4> ADD </h4>
 
-* ADD DES SRC1 SRC2 
+```c
+ADD DES SRC1 SRC2
+```
 
-* ADD DES SRC1 IMM
+```c
+ADD DES SRC1 IMM
+```
 
 <h4> AND </h4>
 
-* AND DES SRC1 SRC2
+```c
+AND DES SRC1 SRC2
+```
 
-* AND DES SRC1 IMM
+```c
+AND DES SRC1 IMM
+```
 
 <h4> BR </h4>
 
