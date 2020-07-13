@@ -1,6 +1,6 @@
 # Tiny-VM
 
-A very simple virtual machine that runs on LC-3 Computer and LC-3 assembly language.
+A very simple virtual machine that runs on [LC-3 Computer](https://en.wikipedia.org/wiki/Little_Computer_3) and LC-3 assembly language.
 
 ## Compile and Run
 
@@ -188,3 +188,9 @@ TRAP trapvector
 <h4> Unused opcode (1101) </h4>
 
 * Initiate an illegal opcode exception.
+
+## Acknowledgements
+
+I want to give my special thanks and credit for work to [Justin Meiners](https://github.com/justinmeiners) and [Ryan Pendleton](https://github.com/rpendleton). They created a great tutorial and I built this project, Tiny-VM, by following [their tutorial](https://justinmeiners.github.io/lc3-vm/).
+
+This repository has no commercial use and built with educational intentions.
