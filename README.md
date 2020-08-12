@@ -16,7 +16,7 @@ A very simple virtual machine that runs on [LC-3 Computer](https://en.wikipedia.
 
 <b> Note: </b> <code>maze.asm</code> is provided just to understand how a LC-3 assembly program looks like. Virtual machine itself executes image files, i.e. object files.
 
-## Intruction Set Architecture (ISA)
+## Instruction Set Architecture (ISA)
 
 * <b>Memory Address Space:</b> 16-bit address space that addresses 65,535 words, each word is 16 bits.
   * Certain sections of memory is reserved for special uses such as:
